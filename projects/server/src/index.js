@@ -25,13 +25,14 @@ app.use(
 app.use(bodyParser.json());
 
 //#region API ROUTES
-const { adminAuth, auth, product } = require("./routers");
+const { adminAuth, auth, product, inventory } = require("./routers");
 
 // ===========================
 // NOTE : Add your routes here
 
 app.use("/api/admin/auth", adminAuth);
 app.use("/api/admin/product", product);
+app.use("/api/admin/inventory", inventory);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
