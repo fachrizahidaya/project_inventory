@@ -1,7 +1,8 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import Axios from 'axios'
 
 import { Box, Toolbar, IconButton, Badge,  Grid, Paper} from '@mui/material'
-import { DashboardOutlined, Notifications } from '@mui/icons-material'
+import { AssignmentOutlined, DashboardOutlined, DoorSlidingOutlined, Inventory2Outlined, Notifications,  PersonOutline } from '@mui/icons-material'
 
 import LeftContainer from '../../../styles/tabs/LeftContainer';
 import TopContainer from '../../../styles/tabs/TopContainer';
@@ -11,6 +12,9 @@ import ItemTab from '../../../styles/tabs/ItemTab';
 
 const Dashboard = () => {
   const [open, setOpen] = useState(true);
+  const [items, setItems] = useState([])
+  const [categories, setCategories] = useState([])
+  console.log(items, categories)
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -22,17 +26,17 @@ function createData(id, date, name, shipTo, paymentMethod, amount) {
 
 const mainListItems = [
   {title:'Dashboard', icon: <DashboardOutlined/>},
-  {title:'Orders', icon: <DashboardOutlined/>},
-  {title:'Racks', icon: <DashboardOutlined/>},
-  {title:'Items', icon: <DashboardOutlined/>},
-  {title:'Users', icon: <DashboardOutlined/>},
+  {title:'Orders', icon: <AssignmentOutlined/>},
+  {title:'Racks', icon: <DoorSlidingOutlined/>},
+  {title:'Items', icon: <Inventory2Outlined/>},
+  {title:'Users', icon: <PersonOutline/>},
 ]
 
 const mainList = (
   <Fragment>
     {mainListItems.map((item, index) => {
       return (
-    <ItemTab title={item.title}>
+    <ItemTab key={index} title={item.title}>
       {item.icon}
     </ItemTab>
       )
@@ -77,6 +81,30 @@ const rows = [
     212.79,
   ),
 ];
+
+const fetchItems = async () => { 
+  try {
+    const res = await Axios.get(`http://localhost:8000/api/admin/product/item`)
+    setItems(res.data)
+  } catch (err) {
+    console.log(err) 
+  }
+
+  }
+  
+  const fetchCategories = async () => { 
+    try {
+      const res = await Axios.get(`http://localhost:8000/api/admin/product/`)
+      setCategories(res.data)
+    } catch (err) {
+      console.log(err)
+    }
+}
+
+useEffect(() => { 
+  fetchItems()
+  fetchCategories()
+}, [])
 
   return (
     <Box sx={{ display: 'flex' }}>

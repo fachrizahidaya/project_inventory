@@ -2,7 +2,7 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material";
 import Landing from "./pages/admin/landing/Landing";
-import Dashboard from "./pages/admin/landing/Dashboard";
+import Dashboard from "./pages/admin/dashboard/Dashboard";
 
 const defaultTheme = createTheme();
 
