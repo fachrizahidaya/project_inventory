@@ -1,9 +1,7 @@
-import Login from '../../../components/admin/landing/Login'
+import Login from "../../../components/admin/landing/Login";
 
 const Landing = () => {
-  return (
-  <Login/>
-  )
-}
+  return <Login />;
+};
 
-export default Landing
+export default Landing;

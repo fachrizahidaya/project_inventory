@@ -2,7 +2,7 @@ import { Container, Grid } from "@mui/material";
 
 import Copyright from "../utils/Copyright";
 
-const DashboardContent = ({ children }) => {
+const Content = ({ children }) => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={3}>
@@ -13,4 +13,4 @@ const DashboardContent = ({ children }) => {
   );
 };
 
-export default DashboardContent;
+export default Content;

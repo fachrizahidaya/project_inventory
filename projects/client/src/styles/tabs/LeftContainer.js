@@ -1,8 +1,17 @@
+import { Fragment } from "react";
 import { Divider, IconButton, List, Toolbar, styled } from "@mui/material";
-import { ChevronLeft } from "@mui/icons-material";
+import {
+  AssignmentOutlined,
+  ChevronLeft,
+  DashboardOutlined,
+  DoorSlidingOutlined,
+  Inventory2Outlined,
+  PersonOutline,
+} from "@mui/icons-material";
 import MuiDrawer from "@mui/material/Drawer";
+import ItemTab from "./ItemTab";
 
-const LeftContainer = ({ onToggle, open, mainList, secondaryList }) => {
+const LeftContainer = ({ onToggle, open, navigate }) => {
   const drawerWidth = 240;
 
   const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
@@ -28,6 +37,28 @@ const LeftContainer = ({ onToggle, open, mainList, secondaryList }) => {
       }),
     },
   }));
+
+  const mainListItems = [
+    { title: "Dashboard", icon: <DashboardOutlined />, navigate: "/dashboard" },
+    { title: "Orders", icon: <AssignmentOutlined />, navigate: "/order" },
+    { title: "Racks", icon: <DoorSlidingOutlined />, navigate: "/rack" },
+    { title: "Items", icon: <Inventory2Outlined />, navigate: "/item" },
+    { title: "Users", icon: <PersonOutline />, navigate: "/user" },
+  ];
+
+  // const secondaryList = <Fragment></Fragment>;
+
+  const mainList = (
+    <Fragment>
+      {mainListItems.map((item, index) => {
+        return (
+          <ItemTab key={index} title={item.title} navigation={item.navigate} navigate={navigate}>
+            {item.icon}
+          </ItemTab>
+        );
+      })}
+    </Fragment>
+  );
 
   return (
     <Drawer variant="permanent" open={open}>

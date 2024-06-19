@@ -1,7 +1,7 @@
-import { IconButton, Toolbar, Typography, styled } from "@mui/material";
+import { Badge, IconButton, Toolbar, Typography, styled } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 
-import { Menu } from "@mui/icons-material";
+import { Menu, Notifications } from "@mui/icons-material";
 
 const TopContainer = ({ onToggle, open, title, children }) => {
   const drawerWidth = 240;
@@ -46,7 +46,11 @@ const TopContainer = ({ onToggle, open, title, children }) => {
         <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
           {title}
         </Typography>
-        {children}
+        <IconButton color="inherit">
+          <Badge badgeContent={null} color="secondary">
+            <Notifications />
+          </Badge>
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
