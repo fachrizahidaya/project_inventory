@@ -1,8 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
 import Axios from "axios";
 
-import Main from "../../../components/admin/main/Main";
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+
+import Main from "../../../components/admin/main/Main";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
