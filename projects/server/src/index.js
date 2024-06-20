@@ -6,7 +6,7 @@ const db = require("./models");
 const bearerToken = require("express-bearer-token");
 const bodyParser = require("body-parser");
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PUBLIC_PORT;
 const app = express();
 app.use(
   cors({
