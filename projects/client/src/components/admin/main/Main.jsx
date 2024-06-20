@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Axios from "axios";
 
 import { Box, Grid, IconButton, Paper, Toolbar } from "@mui/material";
 import Content from "../../../styles/container/Content";
@@ -9,37 +8,12 @@ import TopContainer from "../../../styles/tabs/TopContainer";
 
 const Main = ({ children, icon, title }) => {
   const [open, setOpen] = useState(true);
-  const [items, setItems] = useState([]);
-  const [categories, setCategories] = useState([]);
 
   const navigate = useNavigate();
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
-  const fetchItems = async () => {
-    try {
-      const res = await Axios.get(`http://localhost:8000/api/admin/product/item`);
-      setItems(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const res = await Axios.get(`http://localhost:8000/api/admin/product/`);
-      setCategories(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchItems();
-    fetchCategories();
-  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>

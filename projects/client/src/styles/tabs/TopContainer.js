@@ -3,7 +3,7 @@ import MuiAppBar from "@mui/material/AppBar";
 
 import { Menu, Notifications } from "@mui/icons-material";
 
-const TopContainer = ({ onToggle, open, title, children }) => {
+const TopContainer = ({ onToggle, open, title }) => {
   const drawerWidth = 240;
 
   const AppBar = styled(MuiAppBar, {

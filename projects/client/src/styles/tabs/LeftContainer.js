@@ -42,6 +42,7 @@ const LeftContainer = ({ onToggle, open, navigate }) => {
     { title: "Dashboard", icon: <DashboardOutlined />, navigate: "/dashboard" },
     { title: "Orders", icon: <AssignmentOutlined />, navigate: "/order" },
     { title: "Racks", icon: <DoorSlidingOutlined />, navigate: "/rack" },
+    { title: "Categories", icon: <Inventory2Outlined />, navigate: "/category" },
     { title: "Items", icon: <Inventory2Outlined />, navigate: "/item" },
     { title: "Users", icon: <PersonOutline />, navigate: "/user" },
   ];

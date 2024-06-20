@@ -7,6 +7,7 @@ import Orders from "./pages/admin/order/Orders";
 import Items from "./pages/admin/item/Items";
 import Racks from "./pages/admin/rack/Racks";
 import Users from "./pages/admin/user/Users";
+import Categories from "./pages/admin/category/Categories";
 
 const defaultTheme = createTheme();
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/order" element={<Orders />} />
           <Route path="/rack" element={<Racks />} />
+          <Route path="/category" element={<Categories />} />
           <Route path="/item" element={<Items />} />
           <Route path="/user" element={<Users />} />
         </Routes>
