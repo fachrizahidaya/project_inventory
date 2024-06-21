@@ -1,17 +1,12 @@
 import { Fragment } from "react";
+
 import { Divider, IconButton, List, Toolbar, styled } from "@mui/material";
-import {
-  AssignmentOutlined,
-  ChevronLeft,
-  DashboardOutlined,
-  DoorSlidingOutlined,
-  Inventory2Outlined,
-  PersonOutline,
-} from "@mui/icons-material";
+import { ChevronLeft } from "@mui/icons-material";
+
 import MuiDrawer from "@mui/material/Drawer";
 import ItemTab from "./ItemTab";
 
-const LeftContainer = ({ onToggle, open, navigate }) => {
+const LeftContainer = ({ onToggle, open, mainListItems, secondaryListItems }) => {
   const drawerWidth = 240;
 
   const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
@@ -38,22 +33,23 @@ const LeftContainer = ({ onToggle, open, navigate }) => {
     },
   }));
 
-  const mainListItems = [
-    { title: "Dashboard", icon: <DashboardOutlined />, navigate: "/dashboard" },
-    { title: "Orders", icon: <AssignmentOutlined />, navigate: "/order" },
-    { title: "Racks", icon: <DoorSlidingOutlined />, navigate: "/rack" },
-    { title: "Categories", icon: <Inventory2Outlined />, navigate: "/category" },
-    { title: "Items", icon: <Inventory2Outlined />, navigate: "/item" },
-    { title: "Users", icon: <PersonOutline />, navigate: "/user" },
-  ];
-
-  // const secondaryList = <Fragment></Fragment>;
-
   const mainList = (
     <Fragment>
       {mainListItems.map((item, index) => {
         return (
-          <ItemTab key={index} title={item.title} navigation={item.navigate} navigate={navigate}>
+          <ItemTab key={index} title={item.title} onClick={item.onClick}>
+            {item.icon}
+          </ItemTab>
+        );
+      })}
+    </Fragment>
+  );
+
+  const secondaryList = (
+    <Fragment>
+      {secondaryListItems.map((item, index) => {
+        return (
+          <ItemTab key={index} title={item.title} onClick={item.onClick}>
             {item.icon}
           </ItemTab>
         );
@@ -79,6 +75,7 @@ const LeftContainer = ({ onToggle, open, navigate }) => {
       <List component="nav">
         {mainList}
         <Divider sx={{ my: 1 }} />
+        {secondaryList}
       </List>
     </Drawer>
   );

@@ -1,3 +1,4 @@
+const path = require("path");
 require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
@@ -15,7 +16,7 @@ app.use(
 );
 
 app.use(express.json());
-
+app.use("/Public", express.static(path.join(__dirname, "/Public")));
 app.use(bearerToken());
 app.use(
   bodyParser.urlencoded({

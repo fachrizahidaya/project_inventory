@@ -6,30 +6,31 @@ import { TableCell, TableRow } from "@mui/material";
 import Main from "../../../components/admin/main/Main";
 import TableView from "../../../styles/table/TableView";
 
-const Categories = () => {
-  const [categories, setCategories] = useState([]);
+const Rows = () => {
+  const [rows, setRows] = useState([]);
 
-  const tableHead = ["Name"];
+  const tableHead = ["Name", "Rack"];
 
-  const fetchCategories = async () => {
+  const fetchRows = async () => {
     try {
-      const res = await Axios.get(`http://localhost:8000/api/admin/product`);
-      setCategories(res.data);
+      const res = await Axios.get(`http://localhost:8000/api/admin/inventory/row`);
+      setRows(res.data);
     } catch (err) {
       console.log(err);
     }
   };
 
   useEffect(() => {
-    fetchCategories();
+    fetchRows();
   }, []);
 
   return (
-    <Main title="Categories">
-      <TableView title="Categories" tableHead={tableHead}>
-        {categories.map((item) => (
+    <Main title="Rows">
+      <TableView title="Rows" tableHead={tableHead}>
+        {rows.map((item) => (
           <TableRow key={item.id}>
             <TableCell>{item?.name}</TableCell>
+            <TableCell>{item?.Rack?.name}</TableCell>
           </TableRow>
         ))}
       </TableView>
@@ -37,4 +38,4 @@ const Categories = () => {
   );
 };
 
-export default Categories;
+export default Rows;

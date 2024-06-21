@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 
-const Input = ({ isRequired = false, id, textLabel, name, inputType }) => {
+const Input = ({ isRequired = false, id, textLabel, name, inputType, reference }) => {
   return (
     <TextField
       margin="normal"
@@ -9,9 +9,9 @@ const Input = ({ isRequired = false, id, textLabel, name, inputType }) => {
       id={id}
       label={textLabel}
       name={name}
-      // autoComplete
       autoFocus
       type={inputType}
+      inputRef={reference}
     />
   );
 };

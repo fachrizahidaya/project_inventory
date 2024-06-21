@@ -1,12 +1,15 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Axios from "axios";
 
-import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { TableCell, TableRow } from "@mui/material";
 
 import Main from "../../../components/admin/main/Main";
+import TableView from "../../../styles/table/TableView";
 
 const Items = () => {
   const [items, setItems] = useState([]);
+
+  const tableHead = ["Name", "Category"];
 
   const fetchItems = async () => {
     try {
@@ -23,25 +26,14 @@ const Items = () => {
 
   return (
     <Main title="Items">
-      <Fragment>
-        <Typography>Orders</Typography>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Category</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item?.name}</TableCell>
-                <TableCell>{item?.Type?.name}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Fragment>
+      <TableView title="Items" tableHead={tableHead}>
+        {items.map((item) => (
+          <TableRow key={item.id}>
+            <TableCell>{item?.name}</TableCell>
+            <TableCell>{item?.Type?.name}</TableCell>
+          </TableRow>
+        ))}
+      </TableView>
     </Main>
   );
 };
