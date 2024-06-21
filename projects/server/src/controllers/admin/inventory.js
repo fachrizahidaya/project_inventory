@@ -37,7 +37,7 @@ module.exports = {
   findAll: async (req, res) => {
     try {
       const racks = await rack.findAll({
-        attributes: ["name"],
+        include: [{ model: row }],
       });
       res.status(200).send(racks);
     } catch (err) {
@@ -97,6 +97,18 @@ module.exports = {
         },
       });
       res.status(200).send({ message: "New row created", data });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ message: false, err });
+    }
+  },
+
+  findAllRow: async (req, res) => {
+    try {
+      const rows = await row.findAll({
+        include: [{ model: rack }],
+      });
+      res.status(200).send(rows);
     } catch (err) {
       console.log(err);
       res.status(500).send({ message: false, err });

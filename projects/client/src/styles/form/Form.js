@@ -1,6 +1,6 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 
-const Form = ({ title, textButton, children }) => {
+const Form = ({ title, textButton, children, onSubmit }) => {
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -16,7 +16,7 @@ const Form = ({ title, textButton, children }) => {
         </Typography>
         <Box component="form" noValidate sx={{ mt: 1 }}>
           {children}
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          <Button type="button" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={onSubmit}>
             {textButton}
           </Button>
         </Box>

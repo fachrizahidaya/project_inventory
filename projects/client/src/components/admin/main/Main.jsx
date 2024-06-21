@@ -1,18 +1,54 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import { Box, Grid, IconButton, Paper, Toolbar } from "@mui/material";
+import {
+  AssignmentOutlined,
+  CategoryOutlined,
+  DashboardOutlined,
+  DoorSlidingOutlined,
+  Inventory2Outlined,
+  LogoutOutlined,
+  PersonOutline,
+  SplitscreenOutlined,
+} from "@mui/icons-material";
+
 import Content from "../../../styles/container/Content";
 import LeftContainer from "../../../styles/tabs/LeftContainer";
 import TopContainer from "../../../styles/tabs/TopContainer";
+import { logout } from "../../../redux/admin";
 
 const Main = ({ children, icon, title }) => {
   const [open, setOpen] = useState(true);
+  const [listSelected, setListSelected] = useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const mainListItems = [
+    { title: "Dashboard", icon: <DashboardOutlined />, onClick: () => navigate("/dashboard") },
+    { title: "Orders", icon: <AssignmentOutlined />, onClick: () => navigate("/order") },
+    { title: "Racks", icon: <DoorSlidingOutlined />, onClick: () => navigate("/rack") },
+    { title: "Rows", icon: <SplitscreenOutlined />, onClick: () => navigate("/row") },
+    { title: "Categories", icon: <CategoryOutlined />, onClick: () => navigate("/category") },
+    { title: "Items", icon: <Inventory2Outlined />, onClick: () => navigate("/item") },
+    { title: "Users", icon: <PersonOutline />, onClick: () => navigate("/user") },
+  ];
+
+  const secondaryListItems = [{ title: "Logout", icon: <LogoutOutlined />, onClick: () => logoutHandler() }];
 
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const toggleSetBgColorItem = () => {};
+
+  const logoutHandler = async () => {
+    dispatch(logout());
+
+    localStorage.removeItem("admin_token");
+    navigate("/login");
   };
 
   return (
@@ -21,7 +57,12 @@ const Main = ({ children, icon, title }) => {
         <IconButton color="inherit">{icon}</IconButton>
       </TopContainer>
 
-      <LeftContainer onToggle={toggleDrawer} open={open} navigate={navigate} />
+      <LeftContainer
+        onToggle={toggleDrawer}
+        open={open}
+        mainListItems={mainListItems}
+        secondaryListItems={secondaryListItems}
+      />
 
       <Box
         component="main"

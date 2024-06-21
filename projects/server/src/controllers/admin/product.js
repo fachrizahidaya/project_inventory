@@ -31,9 +31,7 @@ module.exports = {
 
   findAll: async (req, res) => {
     try {
-      const data = await type.findAll({
-        attributes: ["id", "name"],
-      });
+      const data = await type.findAll({});
       res.status(200).send(data);
     } catch (err) {
       console.log(err);
@@ -45,7 +43,6 @@ module.exports = {
     try {
       const data = await type.findOne({
         where: { id: req.params.id },
-        attributes: ["name"],
       });
       if (!data) throw "Not Found";
       res.status(200).send(data);
@@ -108,7 +105,6 @@ module.exports = {
   findAllItem: async (req, res) => {
     try {
       const data = await item.findAll({
-        attributes: ["id", "name", "qty", "unit"],
         include: [{ model: type }, { model: row }],
       });
       res.status(200).send(data);

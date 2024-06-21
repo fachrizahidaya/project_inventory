@@ -1,8 +1,8 @@
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 
-const ItemTab = ({ children, title, navigation, navigate }) => {
+const ItemTab = ({ children, title, onClick }) => {
   return (
-    <ListItem onClick={() => navigate(navigation)}>
+    <ListItem onClick={onClick}>
       <ListItemButton>
         <ListItemIcon>{children}</ListItemIcon>
         <ListItemText primary={title} />
