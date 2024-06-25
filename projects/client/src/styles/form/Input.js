@@ -7,6 +7,7 @@ const Input = ({ isRequired = false, id, textLabel, name, inputType, reference }
       required={isRequired}
       fullWidth
       id={id}
+      variant="standard"
       label={textLabel}
       name={name}
       autoFocus

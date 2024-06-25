@@ -2,7 +2,7 @@ import { Fragment } from "react";
 
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 
-const TableView = ({ children, title, tableHead }) => {
+const TableView = ({ children, title, tableHead, handleOpenSelectedItem }) => {
   return (
     <Fragment>
       <Typography>{title}</Typography>

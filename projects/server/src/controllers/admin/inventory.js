@@ -2,6 +2,7 @@ const { Op, Sequelize } = require("sequelize");
 const db = require("../../models");
 const rack = db.Rack;
 const row = db.Row;
+const items = db.Item;
 
 module.exports = {
   /**
@@ -36,10 +37,11 @@ module.exports = {
 
   findAll: async (req, res) => {
     try {
-      const racks = await rack.findAll({
+      const data = await rack.findAll({
         include: [{ model: row }],
       });
-      res.status(200).send(racks);
+      if (!data) throw "Not Found";
+      res.status(200).send(data);
     } catch (err) {
       console.log(err);
       res.status(500).send({ message: false, err });
@@ -52,6 +54,7 @@ module.exports = {
         where: {
           id: req.params.id,
         },
+        include: [{ model: row }],
       });
       if (!data) throw "Not Found";
       res.status(200).send({ data });
@@ -105,10 +108,27 @@ module.exports = {
 
   findAllRow: async (req, res) => {
     try {
-      const rows = await row.findAll({
+      const data = await row.findAll({
         include: [{ model: rack }],
       });
-      res.status(200).send(rows);
+      if (!data) throw "Not Found";
+      res.status(200).send(data);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ message: false, err });
+    }
+  },
+
+  findOneRow: async (req, res) => {
+    try {
+      const data = await row.findOne({
+        where: {
+          id: req.params.id,
+        },
+        include: [{ model: items }],
+      });
+      if (!data) throw "Not Found";
+      res.status(200).send({ data });
     } catch (err) {
       console.log(err);
       res.status(500).send({ message: false, err });
