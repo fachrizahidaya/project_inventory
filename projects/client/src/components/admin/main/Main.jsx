@@ -48,7 +48,7 @@ const Main = ({ children, icon, title }) => {
     dispatch(logout());
 
     localStorage.removeItem("admin_token");
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
   return (

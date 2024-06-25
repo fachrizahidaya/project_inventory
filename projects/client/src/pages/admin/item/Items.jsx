@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import { TableCell, TableRow } from "@mui/material";
 
@@ -9,7 +10,13 @@ import TableView from "../../../styles/table/TableView";
 const Items = () => {
   const [items, setItems] = useState([]);
 
+  const navigate = useNavigate();
+
   const tableHead = ["Name", "Category"];
+
+  const openSelectedItemHandler = (id) => {
+    navigate(`/item/${id}`, { state: { id: id } });
+  };
 
   const fetchItems = async () => {
     try {
@@ -29,7 +36,9 @@ const Items = () => {
       <TableView title="Items" tableHead={tableHead}>
         {items.map((item) => (
           <TableRow key={item.id}>
-            <TableCell>{item?.name}</TableCell>
+            <TableCell sx={{ cursor: "pointer" }} onClick={() => openSelectedItemHandler(item?.id)}>
+              {item?.name}
+            </TableCell>
             <TableCell>{item?.Type?.name}</TableCell>
           </TableRow>
         ))}

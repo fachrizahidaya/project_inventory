@@ -1,6 +1,6 @@
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Typography } from "@mui/material";
 
-const Form = ({ title, textButton, children, onSubmit }) => {
+const Form = ({ title, textButton, children, onSubmit, isLoading }) => {
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -17,7 +17,7 @@ const Form = ({ title, textButton, children, onSubmit }) => {
         <Box component="form" noValidate sx={{ mt: 1 }}>
           {children}
           <Button type="button" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={onSubmit}>
-            {textButton}
+            {isLoading ? <CircularProgress color="inherit" /> : textButton}
           </Button>
         </Box>
       </Box>

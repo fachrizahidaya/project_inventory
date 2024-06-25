@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import Axios from "axios";
@@ -15,11 +15,15 @@ import Categories from "./pages/admin/category/Categories";
 import Rows from "./pages/admin/row/Rows";
 import PageNotFound from "./styles/global/PageNotFound";
 import { login } from "./redux/admin";
+import Rack from "./pages/admin/rack/[id]";
+import Row from "./pages/admin/row/[id";
+import Item from "./pages/admin/item/[id]";
 
 const defaultTheme = createTheme();
 
 function App() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const adminToken = localStorage.getItem("admin_token");
   const { id } = useSelector((state) => state.admin.value);
 
@@ -45,6 +49,12 @@ function App() {
   };
 
   useEffect(() => {
+    if (!adminToken) {
+      navigate("/login");
+    }
+  }, []);
+
+  useEffect(() => {
     if (adminToken) {
       handleAdminKeepLogin();
     }
@@ -57,6 +67,9 @@ function App() {
           <Route path="/login" element={<Landing />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/order" element={<Orders />} />
+          <Route path="/rack/:id" element={<Rack />} />
+          <Route path="/row/:id" element={<Row />} />
+          <Route path="/item/:id" element={<Item />} />
           <Route path="/rack" element={<Racks />} />
           <Route path="/row" element={<Rows />} />
           <Route path="/category" element={<Categories />} />

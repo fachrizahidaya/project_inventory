@@ -5,6 +5,7 @@ router.post("/", inventory.add);
 router.post("/row", inventory.addRow);
 router.get("/", inventory.findAll);
 router.get("/row", inventory.findAllRow);
+router.get("/row/:id", inventory.findOneRow);
 router.get("/:id", inventory.findOne);
 router.delete("/:id", inventory.remove);
 

@@ -120,6 +120,7 @@ module.exports = {
         where: {
           id: req.params.id,
         },
+        include: [{ model: row }, { model: type }],
       });
       if (!data) throw "Not Found";
       res.status(200).send(data);

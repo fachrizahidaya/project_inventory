@@ -29,7 +29,7 @@ const Landing = () => {
       );
 
       localStorage.setItem("admin_token", res.data?.token);
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       console.log(err);
     }
