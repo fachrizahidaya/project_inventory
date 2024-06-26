@@ -11,6 +11,7 @@ const ModalView = ({ isOpen, toggle, children }) => {
     boxShadow: 24,
     p: 4,
   };
+
   return (
     <Modal open={isOpen} onClose={toggle}>
       <Box sx={style}>{children}</Box>

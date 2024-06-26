@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Axios from "axios";
 
-import { TableCell, TableRow } from "@mui/material";
+import { TableCell, TablePagination, TableRow } from "@mui/material";
 
 import Main from "../../../components/admin/main/Main";
 import TableView from "../../../styles/table/TableView";

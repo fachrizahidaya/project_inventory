@@ -10,5 +10,6 @@ router.get("/item/:id", product.findOneItem);
 router.patch("/:id", product.update);
 router.patch("/item/:id", product.updateItem);
 router.delete("/:id", product.remove);
+router.delete("/item/:id", product.removeItem);
 
 module.exports = router;

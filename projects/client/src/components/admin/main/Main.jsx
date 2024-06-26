@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { Box, Grid, IconButton, Paper, Toolbar } from "@mui/material";
+import { Box, Grid, IconButton, Paper, TablePagination, Toolbar } from "@mui/material";
 import {
   AssignmentOutlined,
   CategoryOutlined,

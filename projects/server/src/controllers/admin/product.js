@@ -143,4 +143,18 @@ module.exports = {
       res.status(500).send({ message: false, err });
     }
   },
+
+  removeItem: async (req, res) => {
+    try {
+      const result = await item.destroy({
+        where: { id: req.params.id },
+      });
+      if (!result) throw "Not found";
+      const data = await type.findAll();
+      res.status(200).send({ message: "Remove success", data });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ message: false, err });
+    }
+  },
 };

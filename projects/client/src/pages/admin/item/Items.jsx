@@ -4,24 +4,24 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
-import { TableCell, TableRow } from "@mui/material";
+import { IconButton, TableCell, TableRow } from "@mui/material";
 
-import { Add } from "@mui/icons-material";
+import { DeleteOutlineOutlined, EditOutlined } from "@mui/icons-material";
 
 import Main from "../../../components/admin/main/Main";
 import TableView from "../../../styles/table/TableView";
-import ModalButton from "../../../styles/form/ModalButton";
-import ModalView from "../../../styles/container/ModalView";
-import Form from "../../../styles/form/Form";
 import Input from "../../../styles/form/Input";
 import SelectInput from "../../../styles/form/SelectInput";
 import { useDisclosure } from "../../../hooks/useDisclosure";
 import { useLoading } from "../../../hooks/useLoading";
+import ConfirmationModal from "../../../styles/modal/ConfirmationModal";
+import AddModal from "../../../styles/modal/AddModal";
 
 const Items = () => {
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState([]);
   const [rows, setRows] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
 
@@ -29,13 +29,34 @@ const Items = () => {
   const navigate = useNavigate();
 
   const { isOpen: addModalIsOpen, toggle: toggleAddModal } = useDisclosure(false);
+  const { isOpen: deleteModalIsOpen, toggle: toggleDeleteModal } = useDisclosure(false);
 
-  const { isLoading: addItemIsLoading, toggle: toggleAddItem } = useLoading(false);
+  const { isLoading: processIsLoading, toggle: toggleProcess } = useLoading(false);
 
-  const tableHead = ["Name", "Category"];
+  const tableHead = ["Name", "Category", "Actions"];
 
   const openSelectedItemHandler = (id) => {
     navigate(`/item/${id}`, { state: { id: id } });
+  };
+
+  const openAddModalHandler = () => {
+    toggleAddModal();
+  };
+
+  const closeAddModalHandler = () => {
+    toggleAddModal();
+    setSelectedCategory(null);
+    setSelectedRow(null);
+  };
+
+  const openDeleteModalHandler = (id) => {
+    setSelectedItem(id);
+    toggleDeleteModal();
+  };
+
+  const closeDeleteModalHandler = () => {
+    setSelectedItem(null);
+    toggleDeleteModal();
   };
 
   const handleCategoryChange = (event) => {
@@ -79,14 +100,28 @@ const Items = () => {
         name: name.current.value,
         typeId: selectedCategory,
       };
-      toggleAddItem();
+
+      toggleProcess();
       await Axios.post(`http://localhost:8000/api/admin/product/item`, req);
       fetchItems();
-      toggleAddItem();
-      toggleAddModal();
+      closeAddModalHandler();
+      toggleProcess();
     } catch (err) {
       console.log(err);
-      toggleAddItem();
+      toggleProcess();
+    }
+  };
+
+  const deleteItem = async () => {
+    try {
+      toggleProcess();
+      await Axios.delete(`http://localhost:8000/api/admin/product/item/${selectedItem}`);
+      fetchItems();
+      closeDeleteModalHandler();
+      toggleProcess();
+    } catch (err) {
+      console.log(err);
+      toggleProcess();
     }
   };
 
@@ -107,34 +142,50 @@ const Items = () => {
   }, []);
 
   return (
-    <>
-      <Main title="Items">
-        <TableView title="Items" tableHead={tableHead}>
-          {items.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell sx={{ cursor: "pointer" }} onClick={() => openSelectedItemHandler(item?.id)}>
-                {item?.name}
-              </TableCell>
-              <TableCell>{item?.Type?.name}</TableCell>
-            </TableRow>
-          ))}
-        </TableView>
-        <ModalButton name="Add" endIcon={<Add />} toggle={toggleAddModal} />
-        <ModalView isOpen={addModalIsOpen} toggle={toggleAddModal}>
-          <Form textButton="Submit" isLoading={addItemIsLoading} onSubmit={addItem}>
-            <Input textLabel="Name" isRequired={true} reference={name} />
-            <SelectInput
-              label="Category"
-              options={categories}
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-              isRequired={true}
-            />
-            <SelectInput label="Row" options={rows} value={selectedRow} onChange={handleRowChange} isRequired={true} />
-          </Form>
-        </ModalView>
-      </Main>
-    </>
+    <Main title="Items">
+      <TableView title="Items" tableHead={tableHead} addModalButton={true} toggleModal={openAddModalHandler}>
+        {items.map((item) => (
+          <TableRow key={item.id}>
+            <TableCell sx={{ cursor: "pointer" }} onClick={() => openSelectedItemHandler(item?.id)}>
+              {item?.name}
+            </TableCell>
+            <TableCell>{item?.Type?.name}</TableCell>
+            <TableCell sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+              <IconButton onClick={null}>
+                <EditOutlined />
+              </IconButton>
+              <IconButton onClick={() => openDeleteModalHandler(item?.id)}>
+                <DeleteOutlineOutlined />
+              </IconButton>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableView>
+      <AddModal
+        isOpen={addModalIsOpen}
+        toggle={closeAddModalHandler}
+        isLoading={processIsLoading}
+        textButton="Submit"
+        onSubmit={addItem}
+      >
+        <Input textLabel="Name" isRequired={true} reference={name} />
+        <SelectInput
+          label="Category"
+          options={categories}
+          value={selectedCategory}
+          onChange={handleCategoryChange}
+          isRequired={true}
+        />
+        <SelectInput label="Row" options={rows} value={selectedRow} onChange={handleRowChange} isRequired={true} />
+      </AddModal>
+      <ConfirmationModal
+        isOpen={deleteModalIsOpen}
+        toggle={toggleDeleteModal}
+        objective="delete"
+        handleClose={closeDeleteModalHandler}
+        onSubmit={deleteItem}
+      />
+    </Main>
   );
 };
 
