@@ -1,7 +1,7 @@
 import ModalView from "../container/ModalView";
 import Form from "../form/Form";
 
-const AddModal = ({ isOpen, toggle, children, isLoading, onSubmit, textButton }) => {
+const EditModal = ({ isOpen, toggle, children, isLoading, onSubmit, textButton }) => {
   return (
     <ModalView isOpen={isOpen} toggle={toggle}>
       <Form textButton={textButton} isLoading={isLoading} onSubmit={onSubmit}>
@@ -11,4 +11,4 @@ const AddModal = ({ isOpen, toggle, children, isLoading, onSubmit, textButton })
   );
 };
 
-export default AddModal;
+export default EditModal;

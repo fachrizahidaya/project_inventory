@@ -132,10 +132,10 @@ module.exports = {
 
   updateItem: async (req, res) => {
     try {
-      const { name, unit, qty, rowId, typeId } = req.body;
+      const { name, typeId } = req.body;
       const isExist = await item.findOne({ where: { id: req.params.id } });
       if (!isExist) throw "Not found";
-      await item.update({ name, qty, unit, RowId: rowId, TypeId: typeId }, { where: { id: req.params.id } });
+      await item.update({ name, TypeId: typeId }, { where: { id: req.params.id } });
       const data = await item.findOne({ where: { id: req.params.id } });
       res.status(200).send({ message: "Item updated", data });
     } catch (err) {
@@ -151,7 +151,7 @@ module.exports = {
       });
       if (!result) throw "Not found";
       const data = await type.findAll();
-      res.status(200).send({ message: "Remove success", data });
+      res.status(200).send({ message: "Item Removed", data });
     } catch (err) {
       console.log(err);
       res.status(500).send({ message: false, err });

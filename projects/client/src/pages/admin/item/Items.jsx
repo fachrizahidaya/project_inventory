@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
-import { IconButton, TableCell, TableRow } from "@mui/material";
+import { IconButton, Snackbar, TableCell, TableRow } from "@mui/material";
 
 import { DeleteOutlineOutlined, EditOutlined } from "@mui/icons-material";
 
@@ -16,6 +16,7 @@ import { useDisclosure } from "../../../hooks/useDisclosure";
 import { useLoading } from "../../../hooks/useLoading";
 import ConfirmationModal from "../../../styles/modal/ConfirmationModal";
 import AddModal from "../../../styles/modal/AddModal";
+import EditModal from "../../../styles/modal/EditModal";
 
 const Items = () => {
   const [items, setItems] = useState([]);
@@ -24,12 +25,15 @@ const Items = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [snackbarMessage, setSnackbarMessage] = useState(null);
 
   const name = useRef();
   const navigate = useNavigate();
 
   const { isOpen: addModalIsOpen, toggle: toggleAddModal } = useDisclosure(false);
+  const { isOpen: editModalIsOpen, toggle: toggleEditModal } = useDisclosure(false);
   const { isOpen: deleteModalIsOpen, toggle: toggleDeleteModal } = useDisclosure(false);
+  const { isOpen: snackbarIsOpen, toggle: toggleSnackbar } = useDisclosure(false);
 
   const { isLoading: processIsLoading, toggle: toggleProcess } = useLoading(false);
 
@@ -49,6 +53,16 @@ const Items = () => {
     setSelectedRow(null);
   };
 
+  const openEditModalHandler = (id) => {
+    setSelectedItem(id);
+    toggleEditModal();
+  };
+
+  const closeEditModalHandler = () => {
+    setSelectedItem(null);
+    toggleEditModal();
+  };
+
   const openDeleteModalHandler = (id) => {
     setSelectedItem(id);
     toggleDeleteModal();
@@ -57,6 +71,16 @@ const Items = () => {
   const closeDeleteModalHandler = () => {
     setSelectedItem(null);
     toggleDeleteModal();
+  };
+
+  const openSnackbar = (value) => {
+    toggleSnackbar();
+    setSnackbarMessage(value);
+  };
+
+  const closeSnackbar = () => {
+    toggleSnackbar();
+    setSnackbarMessage(null);
   };
 
   const handleCategoryChange = (event) => {
@@ -102,9 +126,10 @@ const Items = () => {
       };
 
       toggleProcess();
-      await Axios.post(`http://localhost:8000/api/admin/product/item`, req);
+      const res = await Axios.post(`http://localhost:8000/api/admin/product/item`, req);
       fetchItems();
       closeAddModalHandler();
+      openSnackbar(res.data?.message);
       toggleProcess();
     } catch (err) {
       console.log(err);
@@ -115,9 +140,29 @@ const Items = () => {
   const deleteItem = async () => {
     try {
       toggleProcess();
-      await Axios.delete(`http://localhost:8000/api/admin/product/item/${selectedItem}`);
+      const res = await Axios.delete(`http://localhost:8000/api/admin/product/item/${selectedItem?.id}`);
       fetchItems();
       closeDeleteModalHandler();
+      openSnackbar(res.data?.message);
+      toggleProcess();
+    } catch (err) {
+      console.log(err);
+      toggleProcess();
+    }
+  };
+
+  const updateItem = async () => {
+    try {
+      const req = {
+        name: name.current.value,
+        typeId: selectedCategory,
+      };
+
+      toggleProcess();
+      const res = await Axios.patch(`http://localhost:8000/api/admin/product/item/${selectedItem?.id}`, req);
+      fetchItems();
+      closeEditModalHandler();
+      openSnackbar(res.data?.message);
       toggleProcess();
     } catch (err) {
       console.log(err);
@@ -151,16 +196,17 @@ const Items = () => {
             </TableCell>
             <TableCell>{item?.Type?.name}</TableCell>
             <TableCell sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-              <IconButton onClick={null}>
+              <IconButton onClick={() => openEditModalHandler(item)}>
                 <EditOutlined />
               </IconButton>
-              <IconButton onClick={() => openDeleteModalHandler(item?.id)}>
+              <IconButton onClick={() => openDeleteModalHandler(item)}>
                 <DeleteOutlineOutlined />
               </IconButton>
             </TableCell>
           </TableRow>
         ))}
       </TableView>
+
       <AddModal
         isOpen={addModalIsOpen}
         toggle={closeAddModalHandler}
@@ -176,8 +222,27 @@ const Items = () => {
           onChange={handleCategoryChange}
           isRequired={true}
         />
-        <SelectInput label="Row" options={rows} value={selectedRow} onChange={handleRowChange} isRequired={true} />
+        {/* <SelectInput label="Row" options={rows} value={selectedRow} onChange={handleRowChange} isRequired={true} /> */}
       </AddModal>
+
+      <EditModal
+        toggle={closeEditModalHandler}
+        isOpen={editModalIsOpen}
+        isLoading={processIsLoading}
+        textButton="Save"
+        onSubmit={updateItem}
+      >
+        <Input textLabel="Name" isRequired={true} reference={name} value={selectedItem?.name} />
+        <SelectInput
+          label="Category"
+          options={categories}
+          value={selectedItem?.Type?.id}
+          onChange={handleCategoryChange}
+          isRequired={true}
+        />
+        {/* <SelectInput label="Row" options={rows} value={selectedRow} onChange={handleRowChange} isRequired={true} /> */}
+      </EditModal>
+
       <ConfirmationModal
         isOpen={deleteModalIsOpen}
         toggle={toggleDeleteModal}
@@ -185,6 +250,8 @@ const Items = () => {
         handleClose={closeDeleteModalHandler}
         onSubmit={deleteItem}
       />
+
+      <Snackbar open={snackbarIsOpen} autoHideDuration={1500} onClose={closeSnackbar} message={snackbarMessage} />
     </Main>
   );
 };
