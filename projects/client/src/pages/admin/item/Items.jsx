@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import * as yup from "yup";
 
 import { IconButton, Snackbar, TableCell, TableRow } from "@mui/material";
 
@@ -169,16 +167,6 @@ const Items = () => {
       toggleProcess();
     }
   };
-
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      typeId: 0,
-    },
-    onSubmit: (values) => {
-      addItem(values);
-    },
-  });
 
   useEffect(() => {
     fetchItems();
