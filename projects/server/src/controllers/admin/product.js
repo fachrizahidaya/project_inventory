@@ -32,7 +32,9 @@ module.exports = {
   findAll: async (req, res) => {
     try {
       const data = await type.findAll({});
-      res.status(200).send(data);
+      if (data) {
+        res.status(200).send(data);
+      }
     } catch (err) {
       console.log(err);
       res.status(500).send({ message: false, err });
@@ -104,10 +106,43 @@ module.exports = {
 
   findAllItem: async (req, res) => {
     try {
-      const data = await item.findAll({
-        include: [{ model: type }, { model: row }],
+      const { page, limit, order, sort, search } = req.query;
+      const _page = parseInt(page) || 0;
+      const _limit = parseInt(limit) || 10;
+      const _offset = _limit * _page;
+      const _search = search || "";
+      const _order = order || "id";
+      const _sort = sort || "ASC";
+
+      const total_row = await item.count({
+        where: {
+          [Op.or]: [
+            {
+              name: {
+                [Op.like]: "%" + _search + "%",
+              },
+            },
+          ],
+        },
       });
-      res.status(200).send(data);
+      const total_page = Math.ceil(total_row / limit);
+
+      const data = await item.findAll({
+        limit: _limit,
+        offset: _offset,
+        order: [[_order, _sort]],
+        include: [{ model: type }, { model: row }],
+        where: {
+          [Op.or]: [
+            {
+              name: {
+                [Op.like]: "%" + _search + "%",
+              },
+            },
+          ],
+        },
+      });
+      res.status(200).send({ data: data, page: _page, limit: _limit, total_row: total_row, total_page: total_page });
     } catch (err) {
       console.log(err);
       res.status(500).send({ message: false, err });

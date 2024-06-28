@@ -24,6 +24,8 @@ const Items = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
   const [snackbarMessage, setSnackbarMessage] = useState(null);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(0);
 
   const name = useRef();
   const navigate = useNavigate();
@@ -81,6 +83,10 @@ const Items = () => {
     setSnackbarMessage(null);
   };
 
+  const changePageHandler = (event, value) => {
+    setPage(value - 1);
+  };
+
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
   };
@@ -91,7 +97,7 @@ const Items = () => {
 
   const fetchItems = async () => {
     try {
-      const res = await Axios.get(`http://localhost:8000/api/admin/product/item`);
+      const res = await Axios.get(`http://localhost:8000/api/admin/product/item?limit=${limit}&page=${page}`);
       setItems(res.data);
     } catch (err) {
       console.log(err);
@@ -170,14 +176,29 @@ const Items = () => {
 
   useEffect(() => {
     fetchItems();
+  }, [page]);
+
+  useEffect(() => {
+    fetchItems();
     fetchCategory();
     fetchRow();
   }, []);
 
   return (
     <Main title="Items">
-      <TableView title="Items" tableHead={tableHead} addModalButton={true} toggleModal={openAddModalHandler}>
-        {items.map((item) => (
+      <TableView
+        title="Items"
+        tableHead={tableHead}
+        addModalButton={true}
+        searchField={true}
+        toggleModal={openAddModalHandler}
+        pagination={items?.total_page}
+        page={page}
+        handleChange={changePageHandler}
+        name="search"
+        textLabel="Search"
+      >
+        {items?.data?.map((item) => (
           <TableRow key={item.id}>
             <TableCell sx={{ cursor: "pointer" }} onClick={() => openSelectedItemHandler(item?.id)}>
               {item?.name}
@@ -201,6 +222,7 @@ const Items = () => {
         isLoading={processIsLoading}
         textButton="Submit"
         onSubmit={addItem}
+        disabled={!name && !selectedCategory ? true : false}
       >
         <Input textLabel="Name" isRequired={true} reference={name} />
         <SelectInput

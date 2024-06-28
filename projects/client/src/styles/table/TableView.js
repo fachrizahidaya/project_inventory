@@ -3,11 +3,32 @@ import { Box, Pagination, Table, TableBody, TableCell, TableContainer, TableHead
 import { Add } from "@mui/icons-material";
 
 import ModalButton from "../form/ModalButton";
+import Input from "../form/Input";
 
-const TableView = ({ children, tableHead, addModalButton, toggleModal }) => {
+const TableView = ({
+  children,
+  tableHead,
+  addModalButton,
+  toggleModal,
+  pagination,
+  page,
+  handleChange,
+  searchField,
+  name,
+  textLabel,
+  search,
+}) => {
   return (
     <TableContainer>
-      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: searchField && addModalButton ? "space-between" : "flex-end",
+        }}
+      >
+        {searchField && <Input name={name} textLabel={textLabel} reference={search} />}
         {addModalButton && <ModalButton name="Add" endIcon={<Add />} toggle={toggleModal} />}
       </Box>
       <Table size="small">
@@ -23,7 +44,7 @@ const TableView = ({ children, tableHead, addModalButton, toggleModal }) => {
         <TableBody>{children}</TableBody>
       </Table>
       <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-end", mt: 2 }}>
-        <Pagination count={10} variant="outlined" shape="rounded" />
+        <Pagination page={page + 1} count={pagination} variant="outlined" shape="rounded" onChange={handleChange} />
       </Box>
     </TableContainer>
   );
