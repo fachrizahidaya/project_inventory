@@ -111,7 +111,7 @@ module.exports = {
       const _limit = parseInt(limit) || 10;
       const _offset = _limit * _page;
       const _search = search || "";
-      const _order = order || "id";
+      const _order = order || "name";
       const _sort = sort || "ASC";
 
       const total_row = await item.count({
