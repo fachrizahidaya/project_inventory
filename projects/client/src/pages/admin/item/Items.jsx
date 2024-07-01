@@ -1,10 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+import _ from "lodash";
 
 import { IconButton, Snackbar, TableCell, TableRow } from "@mui/material";
 
-import { DeleteOutlineOutlined, EditOutlined } from "@mui/icons-material";
+import {
+  DeleteOutlineOutlined,
+  EditOutlined,
+  KeyboardArrowDownOutlined,
+  KeyboardArrowUpOutlined,
+} from "@mui/icons-material";
 
 import Main from "../../../components/admin/main/Main";
 import TableView from "../../../styles/table/TableView";
@@ -26,8 +32,13 @@ const Items = () => {
   const [snackbarMessage, setSnackbarMessage] = useState(null);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [sort, setSort] = useState("asc");
+  const [searchInput, setSearchInput] = useState("");
+  const [data, setData] = useState([]);
+  const [searchedData, setSearchedData] = useState([]);
 
   const name = useRef();
+  const search = useRef();
   const navigate = useNavigate();
 
   const { isOpen: addModalIsOpen, toggle: toggleAddModal } = useDisclosure(false);
@@ -37,7 +48,20 @@ const Items = () => {
 
   const { isLoading: processIsLoading, toggle: toggleProcess } = useLoading(false);
 
-  const tableHead = ["Name", "Category", "Actions"];
+  const tableHead = [
+    {
+      name: "Name",
+      icon: sort === "asc" ? <KeyboardArrowDownOutlined /> : <KeyboardArrowUpOutlined />,
+      onClick: () => sortItemHandler(),
+    },
+    { name: "Category", icon: null, onClick: null },
+    { name: "Actions", icon: null, onClick: null },
+  ];
+
+  const sortOptions = [
+    { name: "A to Z", value: "asc" },
+    { name: "Z to A", value: "desc" },
+  ];
 
   const openSelectedItemHandler = (id) => {
     navigate(`/item/${id}`, { state: { id: id } });
@@ -84,6 +108,7 @@ const Items = () => {
   };
 
   const changePageHandler = (event, value) => {
+    setSearchInput("");
     setPage(value - 1);
   };
 
@@ -95,9 +120,26 @@ const Items = () => {
     setSelectedRow(event.target.value);
   };
 
+  const sortItemHandler = () => {
+    if (sort === "asc") {
+      setSort("desc");
+    } else {
+      setSort("asc");
+    }
+  };
+
+  const searchItemHandler = useCallback(
+    _.debounce((value) => {
+      setSearchInput(value);
+    }, 300),
+    []
+  );
+
   const fetchItems = async () => {
     try {
-      const res = await Axios.get(`http://localhost:8000/api/admin/product/item?limit=${limit}&page=${page}`);
+      const res = await Axios.get(
+        `http://localhost:8000/api/admin/product/item?limit=${limit}&page=${page}&sort=${sort}&search=${searchInput}`
+      );
       setItems(res.data);
     } catch (err) {
       console.log(err);
@@ -174,9 +216,28 @@ const Items = () => {
     }
   };
 
+  // useEffect(() => {
+  //   setSearchedData([]);
+  //   return () => {
+  //     searchItemHandler.cancel();
+  //   };
+  // }, [searchInput]);
+
   useEffect(() => {
     fetchItems();
-  }, [page]);
+  }, [page, sort]);
+
+  // useEffect(() => {
+  //   if (items?.data?.length) {
+  //     if (!searchInput) {
+  //       setData((prevData) => [...prevData, ...items?.data]);
+  //       setSearchedData([]);
+  //     } else {
+  //       setSearchedData((prevData) => [...prevData, ...items?.data]);
+  //       setData([]);
+  //     }
+  //   }
+  // }, [items]);
 
   useEffect(() => {
     fetchItems();
@@ -197,9 +258,11 @@ const Items = () => {
         handleChange={changePageHandler}
         name="search"
         textLabel="Search"
+        handleSearch={searchItemHandler}
+        search={search}
       >
-        {items?.data?.map((item) => (
-          <TableRow key={item.id}>
+        {items?.data?.map((item, index) => (
+          <TableRow key={index}>
             <TableCell sx={{ cursor: "pointer" }} onClick={() => openSelectedItemHandler(item?.id)}>
               {item?.name}
             </TableCell>

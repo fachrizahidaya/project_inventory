@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 
-const Input = ({ isRequired = false, id, textLabel, name, inputType, reference, value }) => {
+const Input = ({ isRequired = false, id, textLabel, name, inputType, reference, value, handleSearch }) => {
   return (
     <TextField
       margin="normal"
@@ -14,6 +14,7 @@ const Input = ({ isRequired = false, id, textLabel, name, inputType, reference, 
       type={inputType}
       inputRef={reference}
       defaultValue={value}
+      onChange={handleSearch}
     />
   );
 };
