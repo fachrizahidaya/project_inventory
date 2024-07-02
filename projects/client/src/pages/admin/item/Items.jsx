@@ -34,8 +34,6 @@ const Items = () => {
   const [page, setPage] = useState(0);
   const [sort, setSort] = useState("asc");
   const [searchInput, setSearchInput] = useState("");
-  const [data, setData] = useState([]);
-  const [searchedData, setSearchedData] = useState([]);
 
   const name = useRef();
   const search = useRef();
@@ -56,11 +54,6 @@ const Items = () => {
     },
     { name: "Category", icon: null, onClick: null },
     { name: "Actions", icon: null, onClick: null },
-  ];
-
-  const sortOptions = [
-    { name: "A to Z", value: "asc" },
-    { name: "Z to A", value: "desc" },
   ];
 
   const openSelectedItemHandler = (id) => {
@@ -129,8 +122,9 @@ const Items = () => {
   };
 
   const searchItemHandler = useCallback(
-    _.debounce((value) => {
-      setSearchInput(value);
+    _.debounce((e) => {
+      setSearchInput(e.target.value);
+      setPage(0);
     }, 300),
     []
   );
@@ -216,28 +210,9 @@ const Items = () => {
     }
   };
 
-  // useEffect(() => {
-  //   setSearchedData([]);
-  //   return () => {
-  //     searchItemHandler.cancel();
-  //   };
-  // }, [searchInput]);
-
   useEffect(() => {
     fetchItems();
-  }, [page, sort]);
-
-  // useEffect(() => {
-  //   if (items?.data?.length) {
-  //     if (!searchInput) {
-  //       setData((prevData) => [...prevData, ...items?.data]);
-  //       setSearchedData([]);
-  //     } else {
-  //       setSearchedData((prevData) => [...prevData, ...items?.data]);
-  //       setData([]);
-  //     }
-  //   }
-  // }, [items]);
+  }, [page, sort, searchInput]);
 
   useEffect(() => {
     fetchItems();

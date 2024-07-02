@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@mui/material";
 
-import { Add, KeyboardArrowDownOutlined } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 
 import ModalButton from "../form/ModalButton";
 import Input from "../form/Input";
