@@ -3,7 +3,7 @@ import Input from "../../../styles/form/Input";
 
 const Login = ({ email, password, handleLogin }) => {
   return (
-    <Form title="Sign in" textButton="Sign in" onSubmit={handleLogin}>
+    <Form title="Sign in" textButton="Sign in" onSubmit={handleLogin} forgotPassword={true}>
       <Input id="email" name="email" inputType="email" textLabel="Email" isRequired={true} reference={email} />
       <Input
         id="password"

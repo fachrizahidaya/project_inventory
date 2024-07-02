@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { Box, Grid, IconButton, Paper, TablePagination, Toolbar } from "@mui/material";
+import { Box, Grid, IconButton, Paper, Toolbar } from "@mui/material";
 import {
   AssignmentOutlined,
   CategoryOutlined,
@@ -77,7 +77,7 @@ const Main = ({ children, icon, title }) => {
         <Toolbar />
         <Content>
           <Grid item xs={12}>
-            <Paper sx={{ p: 2, display: "flex", flexDirection: "column", height: 240 }}>{children}</Paper>
+            <Paper sx={{ p: 2 }}>{children}</Paper>
           </Grid>
         </Content>
       </Box>

@@ -1,6 +1,7 @@
-import { Box, Button, CircularProgress, Container, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
+import { Box, Button, CircularProgress, Container, Grid, Typography } from "@mui/material";
 
-const Form = ({ title, textButton, children, onSubmit, isLoading, disabled }) => {
+const Form = ({ title, textButton, children, onSubmit, isLoading, disabled, forgotPassword, signUp }) => {
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -26,6 +27,18 @@ const Form = ({ title, textButton, children, onSubmit, isLoading, disabled }) =>
           >
             {isLoading ? <CircularProgress color="inherit" /> : textButton}
           </Button>
+          <Grid container>
+            {forgotPassword && (
+              <Grid item>
+                <Link>Forgot Password?</Link>
+              </Grid>
+            )}
+            {signUp && (
+              <Grid item>
+                <Link>Forgot Password?</Link>
+              </Grid>
+            )}
+          </Grid>
         </Box>
       </Box>
     </Container>
