@@ -11,7 +11,10 @@ const Rows = () => {
   const [rows, setRows] = useState([]);
   const navigate = useNavigate();
 
-  const tableHead = ["Name", "Rack"];
+  const tableHead = [
+    { name: "Name", icon: null, onClick: null },
+    { name: "Rack", icon: null, onClick: null },
+  ];
 
   const openSelectedRowHandler = (id) => {
     navigate(`/row/${id}`, { state: { id: id } });

@@ -1,4 +1,3 @@
-const db = require("../../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
@@ -6,26 +5,34 @@ const handlebars = require("handlebars");
 const { Op } = require("sequelize");
 const path = require("path");
 
+const db = require("../../models");
+const transporter = require("../../middlewares/transporter");
+
 const admin = db.Admin;
 
 module.exports = {
   register: async (req, res) => {
     try {
-      const { email, password, isSuper, TeamId } = req.body;
+      const { email, password, password_confirmation, isSuper } = req.body;
+      if (!email && !password && !password_confirmation && !isSuper) throw "Fields must not empty";
+      if (password.length < 8) throw "Minimum 8 characters to create password";
+      if (password !== password_confirmation) throw "Password not match!";
       const salt = await bcrypt.genSalt();
       const hashPassword = await bcrypt.hash(password, salt);
+
       const data = await admin.create({
         email,
         password: hashPassword,
-        isSuper,
-        TeamId,
+        isSuper: isSuper,
       });
+
       const payload = {
         email: data.email,
         isSuper: data.isSuper,
-        TeamId: data.TeamId,
       };
+
       const token = jwt.sign(payload, "inventory", { expiresIn: "1h" });
+
       res.status(200).send({
         message: "Admin created",
         data,
@@ -70,6 +77,95 @@ module.exports = {
         },
       });
       res.status(200).send({ result });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ success: false, err });
+    }
+  },
+
+  forgotPassword: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const isAccountExist = await admin.findOne({
+        where: { email },
+      });
+      if (!isAccountExist) throw "Account not found";
+      const payload = {
+        id: isAccountExist.id,
+        email: isAccountExist.email,
+      };
+      const token = jwt.sign(payload, "inventory", { expiresIn: "1h" });
+      const tempEmail = fs.readFileSync(path.join(__dirname, "../../templates/reset.html"), "utf-8");
+      const tempCompile = handlebars.compile(tempEmail);
+      const tempResult = tempCompile({
+        email: isAccountExist.email,
+        link: `http://localhost:3000/reset-password/${token}`,
+      });
+      await transporter.sendMail({
+        from: "Super Admin",
+        to: email,
+        subject: "Reset Account Password",
+        html: tempResult,
+      });
+      res.status(200).send({
+        message: "Please check your email",
+        token,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ success: false, err });
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { password, confirmPassword } = req.body;
+      const isAccountExist = await admin.findOne({
+        where: {
+          email: req.user.email,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ success: false, err });
+    }
+  },
+
+  findAll: async (req, res) => {
+    try {
+      const data = await admin.findAll({});
+      if (!data) throw "Data not found";
+      res.status(200).send({ data });
+    } catch (err) {
+      res.status(500).send({ message: false, err });
+    }
+  },
+
+  findOne: async (req, res) => {
+    try {
+      const data = await admin.findOne({
+        where: {
+          id: req.params.id,
+        },
+      });
+      if (!data) throw "Admin not found";
+      res.status(200).send({ data });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ success: false, err });
+    }
+  },
+
+  remove: async (req, res) => {
+    try {
+      const result = await admin.destroy({
+        where: {
+          id: req.params.id,
+        },
+      });
+      if (!result) throw "Admin not found";
+      const data = await admin.findAll({});
+      res.status(200).send({ message: "Admin removed", data });
     } catch (err) {
       console.log(err);
       res.status(500).send({ success: false, err });

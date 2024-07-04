@@ -1,7 +1,7 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import ModalView from "../container/ModalView";
 
-const ConfirmationModal = ({ isOpen, toggle, objective, handleClose, onSubmit }) => {
+const ConfirmationModal = ({ isOpen, toggle, objective, handleClose, onSubmit, isLoading }) => {
   return (
     <ModalView isOpen={isOpen} toggle={toggle}>
       <Typography variant="h6" component="h2">
@@ -12,7 +12,7 @@ const ConfirmationModal = ({ isOpen, toggle, objective, handleClose, onSubmit })
           Cancel
         </Button>
         <Button onClick={onSubmit} variant="contained" sx={{ ml: 1 }}>
-          Confirm
+          {isLoading ? <CircularProgress /> : "Confirm"}
         </Button>
       </Box>
     </ModalView>

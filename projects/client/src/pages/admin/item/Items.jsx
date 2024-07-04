@@ -137,6 +137,7 @@ const Items = () => {
       setItems(res.data);
     } catch (err) {
       console.log(err);
+      openSnackbar(err.response?.data?.message);
     }
   };
 
@@ -146,6 +147,7 @@ const Items = () => {
       setCategories(res.data);
     } catch (err) {
       console.log(err);
+      openSnackbar(err.response?.data?.message);
     }
   };
 
@@ -155,6 +157,7 @@ const Items = () => {
       setRows(res.data);
     } catch (err) {
       console.log(err);
+      openSnackbar(err.response?.data?.message);
     }
   };
 
@@ -173,6 +176,7 @@ const Items = () => {
       toggleProcess();
     } catch (err) {
       console.log(err);
+      openSnackbar(err.response?.data?.message);
       toggleProcess();
     }
   };
@@ -187,6 +191,7 @@ const Items = () => {
       toggleProcess();
     } catch (err) {
       console.log(err);
+      openSnackbar(err.response?.data?.message);
       toggleProcess();
     }
   };
@@ -206,6 +211,7 @@ const Items = () => {
       toggleProcess();
     } catch (err) {
       console.log(err);
+      openSnackbar(err.response?.data?.message);
       toggleProcess();
     }
   };
@@ -223,7 +229,6 @@ const Items = () => {
   return (
     <Main title="Items">
       <TableView
-        title="Items"
         tableHead={tableHead}
         addModalButton={true}
         searchField={true}
@@ -293,7 +298,7 @@ const Items = () => {
 
       <ConfirmationModal
         isOpen={deleteModalIsOpen}
-        toggle={toggleDeleteModal}
+        toggle={closeDeleteModalHandler}
         objective="delete"
         handleClose={closeDeleteModalHandler}
         onSubmit={deleteItem}

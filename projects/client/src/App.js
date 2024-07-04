@@ -18,6 +18,8 @@ import { login } from "./redux/admin";
 import Rack from "./pages/admin/rack/[id]";
 import Row from "./pages/admin/row/[id";
 import Item from "./pages/admin/item/[id]";
+import Admins from "./pages/admin/admin/Admins";
+import Divisions from "./pages/admin/division/Divisions";
 
 const defaultTheme = createTheme();
 
@@ -35,7 +37,7 @@ function App() {
 
   const handleAdminKeepLogin = async () => {
     try {
-      const res = await Axios.get(`http://localhost:8000/api/admin/auth/`, adminHeaders);
+      const res = await Axios.get(`http://localhost:8000/api/admin/auth/keep-login`, adminHeaders);
       dispatch(
         login({
           id: res.data?.result?.id,
@@ -66,15 +68,17 @@ function App() {
         <Routes>
           <Route path="/login" element={<Landing />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin" element={<Admins />} />
           <Route path="/order" element={<Orders />} />
           <Route path="/rack/:id" element={<Rack />} />
           <Route path="/row/:id" element={<Row />} />
-          <Route path="/item/:id" element={<Item />} />
           <Route path="/rack" element={<Racks />} />
           <Route path="/row" element={<Rows />} />
           <Route path="/category" element={<Categories />} />
           <Route path="/item" element={<Items />} />
+          <Route path="/item/:id" element={<Item />} />
           <Route path="/user" element={<Users />} />
+          <Route path="/division" element={<Divisions />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
