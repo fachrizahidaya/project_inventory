@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
@@ -7,10 +7,20 @@ import Login from "../../../components/admin/landing/Login";
 import { login } from "../../../redux/admin";
 
 const Landing = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const email = useRef();
   const password = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const showPasswordHandler = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const mouseDownPasswordHandler = (event) => {
+    event.preventDefault();
+  };
 
   const loginHandler = async () => {
     try {
@@ -35,7 +45,16 @@ const Landing = () => {
     }
   };
 
-  return <Login email={email} password={password} handleLogin={loginHandler} />;
+  return (
+    <Login
+      email={email}
+      password={password}
+      handleLogin={loginHandler}
+      showPassword={showPassword}
+      handleShowPassword={showPasswordHandler}
+      handleMouseDownPassword={mouseDownPasswordHandler}
+    />
+  );
 };
 
 export default Landing;

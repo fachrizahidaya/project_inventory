@@ -9,7 +9,7 @@ import TableView from "../../../styles/table/TableView";
 const Categories = () => {
   const [categories, setCategories] = useState([]);
 
-  const tableHead = ["Name"];
+  const tableHead = [{ name: "Name", icon: null, onClick: null }];
 
   const fetchCategories = async () => {
     try {

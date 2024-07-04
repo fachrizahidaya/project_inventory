@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Box, Grid, IconButton, Paper, Toolbar } from "@mui/material";
 import {
+  AdminPanelSettingsOutlined,
   AssignmentOutlined,
   CategoryOutlined,
   DashboardOutlined,
   DoorSlidingOutlined,
   Inventory2Outlined,
   LogoutOutlined,
+  PeopleOutline,
   PersonOutline,
   SplitscreenOutlined,
 } from "@mui/icons-material";
@@ -23,18 +25,31 @@ const Main = ({ children, icon, title }) => {
   const [open, setOpen] = useState(true);
   const [listSelected, setListSelected] = useState(null);
 
+  const { isSuper } = useSelector((state) => state.admin.value);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const mainListItems = [
-    { title: "Dashboard", icon: <DashboardOutlined />, onClick: () => navigate("/dashboard") },
-    { title: "Orders", icon: <AssignmentOutlined />, onClick: () => navigate("/order") },
-    { title: "Racks", icon: <DoorSlidingOutlined />, onClick: () => navigate("/rack") },
-    { title: "Rows", icon: <SplitscreenOutlined />, onClick: () => navigate("/row") },
-    { title: "Categories", icon: <CategoryOutlined />, onClick: () => navigate("/category") },
-    { title: "Items", icon: <Inventory2Outlined />, onClick: () => navigate("/item") },
-    { title: "Users", icon: <PersonOutline />, onClick: () => navigate("/user") },
-  ];
+  const mainListItems = isSuper
+    ? [
+        { title: "Dashboard", icon: <DashboardOutlined />, onClick: () => navigate("/dashboard") },
+        { title: "Admins", icon: <AdminPanelSettingsOutlined />, onClick: () => navigate("/admin") },
+        { title: "Orders", icon: <AssignmentOutlined />, onClick: () => navigate("/order") },
+        { title: "Racks", icon: <DoorSlidingOutlined />, onClick: () => navigate("/rack") },
+        { title: "Rows", icon: <SplitscreenOutlined />, onClick: () => navigate("/row") },
+        { title: "Categories", icon: <CategoryOutlined />, onClick: () => navigate("/category") },
+        { title: "Items", icon: <Inventory2Outlined />, onClick: () => navigate("/item") },
+        { title: "Divisions", icon: <PeopleOutline />, onClick: () => navigate("/division") },
+      ]
+    : [
+        { title: "Dashboard", icon: <DashboardOutlined />, onClick: () => navigate("/dashboard") },
+        { title: "Orders", icon: <AssignmentOutlined />, onClick: () => navigate("/order") },
+        { title: "Racks", icon: <DoorSlidingOutlined />, onClick: () => navigate("/rack") },
+        { title: "Rows", icon: <SplitscreenOutlined />, onClick: () => navigate("/row") },
+        { title: "Categories", icon: <CategoryOutlined />, onClick: () => navigate("/category") },
+        { title: "Items", icon: <Inventory2Outlined />, onClick: () => navigate("/item") },
+        { title: "Users", icon: <PersonOutline />, onClick: () => navigate("/user") },
+      ];
 
   const secondaryListItems = [{ title: "Logout", icon: <LogoutOutlined />, onClick: () => logoutHandler() }];
 

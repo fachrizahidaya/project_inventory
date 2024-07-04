@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Admin.hasMany(models.Pickup);
-      Admin.belongsTo(models.Team);
     }
   }
   Admin.init(

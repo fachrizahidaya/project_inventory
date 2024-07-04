@@ -85,6 +85,11 @@ module.exports = {
     }
   },
   /***************************************************************************** */
+  /**
+   * Controller for Item
+   * @param {*} req
+   * @param {*} res
+   */
   addItem: async (req, res) => {
     try {
       const { name, typeId } = req.body;
@@ -142,6 +147,7 @@ module.exports = {
           ],
         },
       });
+      if (!data) throw "Data not found";
       res.status(200).send({ data: data, page: _page, limit: _limit, total_row: total_row, total_page: total_page });
     } catch (err) {
       console.log(err);
