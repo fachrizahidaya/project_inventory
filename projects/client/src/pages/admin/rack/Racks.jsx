@@ -12,7 +12,7 @@ const Racks = () => {
 
   const navigate = useNavigate();
 
-  const tableHead = ["Name"];
+  const tableHead = [{ name: "Name", icon: null, onClick: null }];
 
   const openSelectedRackHandler = (id) => {
     navigate(`/rack/${id}`, { state: { id: id } });

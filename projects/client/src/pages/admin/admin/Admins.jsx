@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
+import { useSelector } from "react-redux";
 
 import { IconButton, Snackbar, TableCell, TableRow } from "@mui/material";
 
@@ -22,6 +23,8 @@ const Admins = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState(null);
+
+  const { isSuper } = useSelector((state) => state.admin.value);
 
   const email = useRef();
   const password = useRef();
@@ -109,7 +112,7 @@ const Admins = () => {
       setAdmins(res.data);
     } catch (err) {
       console.log(err);
-      openSnackbar(err.response?.data?.message);
+      openSnackbar(err.response?.data?.err);
     }
   };
 
@@ -118,7 +121,7 @@ const Admins = () => {
       const req = {
         email: email.current.value,
         password: password.current.value,
-        password_confirmation: confirmPassword.current.value,
+        confirmPassword: confirmPassword.current.value,
         isSuper: selectedOption,
       };
 

@@ -23,6 +23,7 @@ const Form = ({ title, textButton, children, onSubmit, isLoading, disabled, forg
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             onClick={onSubmit}
+            onKeyDown={onSubmit}
             disabled={disabled}
           >
             {isLoading ? <CircularProgress color="inherit" /> : textButton}
@@ -30,7 +31,7 @@ const Form = ({ title, textButton, children, onSubmit, isLoading, disabled, forg
           <Grid container>
             {forgotPassword && (
               <Grid item>
-                <Link>Forgot Password?</Link>
+                <Link to="/forgot-password">Forgot Password?</Link>
               </Grid>
             )}
             {signUp && (
