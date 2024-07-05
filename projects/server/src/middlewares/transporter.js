@@ -4,7 +4,7 @@ const transporter = createTransport({
   service: "gmail",
   auth: {
     user: "fachriza.hidaya98@gmail.com",
-    pass: "Masganteng,1605",
+    pass: "spiqvsxqskwasheq",
   },
   tls: {
     rejectUnauthorized: false,

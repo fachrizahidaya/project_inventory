@@ -13,10 +13,12 @@ const admin = db.Admin;
 module.exports = {
   register: async (req, res) => {
     try {
-      const { email, password, password_confirmation, isSuper } = req.body;
-      if (!email && !password && !password_confirmation && !isSuper) throw "Fields must not empty";
+      const { email, password, confirmPassword, isSuper } = req.body;
+
+      if (!email && !password && !confirmPassword && !isSuper) throw "Fields must not empty";
       if (password.length < 8) throw "Minimum 8 characters to create password";
-      if (password !== password_confirmation) throw "Password not match!";
+      if (password !== confirmPassword) throw "Password not match!";
+
       const salt = await bcrypt.genSalt();
       const hashPassword = await bcrypt.hash(password, salt);
 
@@ -95,6 +97,7 @@ module.exports = {
         email: isAccountExist.email,
       };
       const token = jwt.sign(payload, "inventory", { expiresIn: "1h" });
+
       const tempEmail = fs.readFileSync(path.join(__dirname, "../../templates/reset.html"), "utf-8");
       const tempCompile = handlebars.compile(tempEmail);
       const tempResult = tempCompile({
@@ -120,11 +123,46 @@ module.exports = {
   resetPassword: async (req, res) => {
     try {
       const { password, confirmPassword } = req.body;
+      const token = req.headers.authorization.split(" ")[1];
+      let decoded;
+      decoded = jwt.verify(token, "inventory");
+      const { email } = decoded;
+      console.log("e", email);
       const isAccountExist = await admin.findOne({
         where: {
-          email: req.user.email,
+          email,
         },
       });
+
+      if (!password && !confirmPassword) throw "Fields must not empty";
+      if (password.length < 8) throw "Minimum 8 characters to create password";
+      if (password !== confirmPassword) throw "Password not match!";
+
+      const salt = await bcrypt.genSalt(10);
+      const hashPass = await bcrypt.hash(password, salt);
+      await admin.update(
+        {
+          password: hashPass,
+        },
+        {
+          where: {
+            email,
+          },
+        }
+      );
+      const tempEmail = fs.readFileSync(path.join(__dirname, "../../templates/change-password.html"), "utf-8");
+      const tempCompile = handlebars.compile(tempEmail);
+      const tempResult = tempCompile({
+        email,
+      });
+      await transporter.sendMail({
+        from: "Super Admin",
+        to: email,
+        subject: "Password Changed",
+        html: tempResult,
+      });
+
+      res.status(200).send({ message: "Please login again", data: isAccountExist });
     } catch (err) {
       console.log(err);
       res.status(500).send({ success: false, err });

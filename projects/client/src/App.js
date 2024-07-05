@@ -20,6 +20,8 @@ import Row from "./pages/admin/row/[id";
 import Item from "./pages/admin/item/[id]";
 import Admins from "./pages/admin/admin/Admins";
 import Divisions from "./pages/admin/division/Divisions";
+import ForgotPassword from "./pages/admin/landing/ForgotPassword";
+import ResetPassword from "./pages/admin/landing/ResetPassword";
 
 const defaultTheme = createTheme();
 
@@ -50,11 +52,11 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    if (!adminToken) {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!adminToken) {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (adminToken) {
@@ -67,6 +69,8 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/login" element={<Landing />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<Admins />} />
           <Route path="/order" element={<Orders />} />
