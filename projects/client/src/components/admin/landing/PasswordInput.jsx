@@ -10,9 +10,11 @@ const PasswordInput = ({
   handleShowConfirmPassword,
   handleMouseDownConfirmPassword,
   showConfirmPassword,
+  handleSubmit,
+  isLoading,
 }) => {
   return (
-    <Form title="Reset Password" textButton="Submit" onSubmit={null}>
+    <Form title="Reset Password" textButton="Submit" onSubmit={handleSubmit} isLoading={isLoading}>
       <Input
         id="password"
         name="password"
