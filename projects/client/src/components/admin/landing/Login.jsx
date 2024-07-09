@@ -1,9 +1,17 @@
 import Form from "../../../styles/form/Form";
 import Input from "../../../styles/form/Input";
 
-const Login = ({ email, password, handleLogin, handleShowPassword, handleMouseDownPassword, showPassword }) => {
+const Login = ({
+  email,
+  password,
+  handleLogin,
+  handleShowPassword,
+  handleMouseDownPassword,
+  showPassword,
+  isLoading,
+}) => {
   return (
-    <Form title="Sign in" textButton="Sign in" onSubmit={handleLogin} forgotPassword={true}>
+    <Form title="Sign in" textButton="Sign in" onSubmit={handleLogin} forgotPassword={true} isLoading={isLoading}>
       <Input id="email" name="email" inputType="email" textLabel="Email" isRequired={true} reference={email} />
       <Input
         id="password"
