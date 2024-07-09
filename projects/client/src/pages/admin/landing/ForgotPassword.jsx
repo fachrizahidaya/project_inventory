@@ -9,6 +9,7 @@ import { Snackbar } from "@mui/material";
 
 const ForgotPassword = () => {
   const [snackbarMessage, setSnackbarMessage] = useState(null);
+
   const email = useRef();
   const navigate = useNavigate();
 
@@ -26,6 +27,10 @@ const ForgotPassword = () => {
     setSnackbarMessage(null);
   };
 
+  const returnPreviousPageHandler = () => {
+    navigate("/login");
+  };
+
   const emailVerificationHandler = async () => {
     try {
       const req = {
@@ -33,7 +38,7 @@ const ForgotPassword = () => {
       };
 
       toggleProcess();
-      const res = await Axios.post(`http://localhost:8000/api/admin/auth/forgot-password`, req);
+      const res = await Axios.put(`http://localhost:8000/api/admin/auth/forgot-password`, req);
       openSnackbar(res.data?.message);
       toggleProcess();
     } catch (err) {
@@ -45,7 +50,12 @@ const ForgotPassword = () => {
 
   return (
     <>
-      <EmailInput email={email} handleSendEmail={emailVerificationHandler} isLoading={processIsLoading} />
+      <EmailInput
+        email={email}
+        handleSendEmail={emailVerificationHandler}
+        isLoading={processIsLoading}
+        handleReturn={returnPreviousPageHandler}
+      />
       <Snackbar open={snackbarIsOpen} autoHideDuration={3000} onClose={closeSnackbar} message={snackbarMessage} />
     </>
   );

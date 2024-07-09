@@ -127,7 +127,6 @@ module.exports = {
       let decoded;
       decoded = jwt.verify(token, "inventory");
       const { email } = decoded;
-      console.log("e", email);
       const isAccountExist = await admin.findOne({
         where: {
           email,

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
+import { useSelector } from "react-redux";
 
 import { IconButton, Snackbar, TableCell, TableRow } from "@mui/material";
 
@@ -35,6 +36,8 @@ const Items = () => {
   const [sort, setSort] = useState("asc");
   const [searchInput, setSearchInput] = useState("");
 
+  const { isSuper } = useSelector((state) => state.admin.value);
+
   const name = useRef();
   const search = useRef();
   const navigate = useNavigate();
@@ -46,15 +49,24 @@ const Items = () => {
 
   const { isLoading: processIsLoading, toggle: toggleProcess } = useLoading(false);
 
-  const tableHead = [
-    {
-      name: "Name",
-      icon: sort === "asc" ? <KeyboardArrowDownOutlined /> : <KeyboardArrowUpOutlined />,
-      onClick: () => sortItemHandler(),
-    },
-    { name: "Category", icon: null, onClick: null },
-    { name: "Actions", icon: null, onClick: null },
-  ];
+  const tableHead = isSuper
+    ? [
+        {
+          name: "Name",
+          icon: sort === "asc" ? <KeyboardArrowDownOutlined /> : <KeyboardArrowUpOutlined />,
+          onClick: () => sortItemHandler(),
+        },
+        { name: "Category", icon: null, onClick: null },
+      ]
+    : [
+        {
+          name: "Name",
+          icon: sort === "asc" ? <KeyboardArrowDownOutlined /> : <KeyboardArrowUpOutlined />,
+          onClick: () => sortItemHandler(),
+        },
+        { name: "Category", icon: null, onClick: null },
+        { name: "Actions", icon: null, onClick: null },
+      ];
 
   const openSelectedItemHandler = (id) => {
     navigate(`/item/${id}`, { state: { id: id } });
@@ -137,7 +149,7 @@ const Items = () => {
       setItems(res.data);
     } catch (err) {
       console.log(err);
-      openSnackbar(err.response?.data?.message);
+      openSnackbar(err.response?.data?.err);
     }
   };
 
@@ -147,7 +159,7 @@ const Items = () => {
       setCategories(res.data);
     } catch (err) {
       console.log(err);
-      openSnackbar(err.response?.data?.message);
+      openSnackbar(err.response?.data?.err);
     }
   };
 
@@ -157,7 +169,7 @@ const Items = () => {
       setRows(res.data);
     } catch (err) {
       console.log(err);
-      openSnackbar(err.response?.data?.message);
+      openSnackbar(err.response?.data?.err);
     }
   };
 
@@ -176,7 +188,7 @@ const Items = () => {
       toggleProcess();
     } catch (err) {
       console.log(err);
-      openSnackbar(err.response?.data?.message);
+      openSnackbar(err.response?.data?.err);
       toggleProcess();
     }
   };
@@ -191,7 +203,7 @@ const Items = () => {
       toggleProcess();
     } catch (err) {
       console.log(err);
-      openSnackbar(err.response?.data?.message);
+      openSnackbar(err.response?.data?.err);
       toggleProcess();
     }
   };
@@ -211,7 +223,7 @@ const Items = () => {
       toggleProcess();
     } catch (err) {
       console.log(err);
-      openSnackbar(err.response?.data?.message);
+      openSnackbar(err.response?.data?.err);
       toggleProcess();
     }
   };
@@ -247,14 +259,16 @@ const Items = () => {
               {item?.name}
             </TableCell>
             <TableCell>{item?.Type?.name}</TableCell>
-            <TableCell sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-              <IconButton onClick={() => openEditModalHandler(item)}>
-                <EditOutlined />
-              </IconButton>
-              <IconButton onClick={() => openDeleteModalHandler(item)}>
-                <DeleteOutlineOutlined />
-              </IconButton>
-            </TableCell>
+            {!isSuper && (
+              <TableCell sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                <IconButton onClick={() => openEditModalHandler(item)}>
+                  <EditOutlined />
+                </IconButton>
+                <IconButton onClick={() => openDeleteModalHandler(item)}>
+                  <DeleteOutlineOutlined />
+                </IconButton>
+              </TableCell>
+            )}
           </TableRow>
         ))}
       </TableView>

@@ -1,17 +1,29 @@
 import { Link } from "react-router-dom";
-import { Box, Button, CircularProgress, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Grid, IconButton, Typography } from "@mui/material";
+import { ArrowBackOutlined } from "@mui/icons-material";
 
-const Form = ({ title, textButton, children, onSubmit, isLoading, disabled, forgotPassword, signUp }) => {
+const Form = ({
+  title,
+  textButton,
+  children,
+  onSubmit,
+  isLoading,
+  disabled,
+  forgotPassword,
+  signUp,
+  withReturn,
+  handleReturn,
+}) => {
   return (
     <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        {withReturn && (
+          <Box sx={{ display: "flex", width: "100%" }}>
+            <IconButton onClick={handleReturn}>
+              <ArrowBackOutlined />
+            </IconButton>
+          </Box>
+        )}
         <Typography component="h1" variant="h5">
           {title}
         </Typography>

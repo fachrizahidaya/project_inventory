@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import Axios from "axios";
@@ -22,12 +22,13 @@ import Admins from "./pages/admin/admin/Admins";
 import Divisions from "./pages/admin/division/Divisions";
 import ForgotPassword from "./pages/admin/landing/ForgotPassword";
 import ResetPassword from "./pages/admin/landing/ResetPassword";
+import RequireAuth from "./components/auth/RequireAuth";
+import StoredAuth from "./components/auth/StoredAuth";
 
 const defaultTheme = createTheme();
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const adminToken = localStorage.getItem("admin_token");
   const { id } = useSelector((state) => state.admin.value);
 
@@ -37,7 +38,7 @@ function App() {
     },
   };
 
-  const handleAdminKeepLogin = async () => {
+  const handleKeepLoginAdmin = async () => {
     try {
       const res = await Axios.get(`http://localhost:8000/api/admin/auth/keep-login`, adminHeaders);
       dispatch(
@@ -52,15 +53,9 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   if (!adminToken) {
-  //     navigate("/login");
-  //   }
-  // }, []);
-
   useEffect(() => {
     if (adminToken) {
-      handleAdminKeepLogin();
+      handleKeepLoginAdmin();
     }
   }, []);
 
@@ -69,20 +64,111 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/login" element={<Landing />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route
+            path="/forgot-password"
+            element={
+              <StoredAuth>
+                <ForgotPassword />
+              </StoredAuth>
+            }
+          />
+          <Route
+            path="/reset-password/:token"
+            element={
+              <StoredAuth>
+                <ResetPassword />
+              </StoredAuth>
+            }
+          />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin" element={<Admins />} />
-          <Route path="/order" element={<Orders />} />
-          <Route path="/rack/:id" element={<Rack />} />
-          <Route path="/row/:id" element={<Row />} />
-          <Route path="/rack" element={<Racks />} />
-          <Route path="/row" element={<Rows />} />
-          <Route path="/category" element={<Categories />} />
-          <Route path="/item" element={<Items />} />
-          <Route path="/item/:id" element={<Item />} />
-          <Route path="/user" element={<Users />} />
-          <Route path="/division" element={<Divisions />} />
+          <Route
+            path="/admin"
+            element={
+              <RequireAuth>
+                <Admins />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/order"
+            element={
+              <RequireAuth>
+                <Orders />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/rack/:id"
+            element={
+              <RequireAuth>
+                <Rack />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/row/:id"
+            element={
+              <RequireAuth>
+                <Row />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/rack"
+            element={
+              <RequireAuth>
+                <Racks />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/row"
+            element={
+              <RequireAuth>
+                <Rows />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/category"
+            element={
+              <RequireAuth>
+                <Categories />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/item"
+            element={
+              <RequireAuth>
+                <Items />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/item/:id"
+            element={
+              <RequireAuth>
+                <Item />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/user"
+            element={
+              <RequireAuth>
+                <Users />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/division"
+            element={
+              <RequireAuth>
+                <Divisions />
+              </RequireAuth>
+            }
+          />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
